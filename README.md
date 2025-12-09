@@ -11,9 +11,8 @@ A web-based application to detect cancer from medical images using Deep Learning
 
 ### 1. Backend Setup
 Navigate to the backend folder:
-```bash
+```bash```
 cd backend
-
 
 
 ---
