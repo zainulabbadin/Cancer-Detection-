@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancer Detection System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <header>
+            <h1>Medical AI Diagnostic</h1>
+            <p>Cancer Detection System</p>
+        </header>
+
+        <div class="card">
+            <div class="upload-area">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <button class="btn-select" onclick="document.getElementById('fileInput').click()">
+                    Select MRI / X-Ray Image
+                </button>
+                <p id="fileName">No file selected</p>
+            </div>
+
+            <div class="preview-box">
+                <img id="imagePreview" src="" alt="Preview" style="display: none;">
+            </div>
+
+            <button id="analyzeBtn" class="btn-analyze" disabled>Analyze Image</button>
+
+            <div id="loading" class="loader" style="display: none;">Processing...</div>
+
+            <div id="resultBox" class="result-container" style="display: none;">
+                <h3>Diagnosis Result</h3>
+                <div class="result-item">
+                    <span>Prediction:</span>
+                    <strong id="predValue">--</strong>
+                </div>
+                <div class="result-item">
+                    <span>Confidence:</span>
+                    <strong id="confValue">--%</strong>
+                </div>
+                <p id="systemMsg" class="meta-text"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
