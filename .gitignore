@@ -1,0 +1,13 @@
+# Backend / generated
+node_modules/
+dist/
+build/
+vendor/
+.cache/
+__pycache__/
+backend/venv/
+
+
+# Env & logs
+.env
+*.log
