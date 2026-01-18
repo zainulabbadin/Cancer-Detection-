@@ -6,6 +6,8 @@ vendor/
 .cache/
 __pycache__/
 backend/venv/
+backend/venv_test/
+venv/
 
 
 # Env & logs
