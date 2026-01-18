@@ -9,11 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "bootstrap": "^5.3.8",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
-  },
+  "dependencies": {},
   "devDependencies": {
     "live-server": "^1.2.2"
   }
