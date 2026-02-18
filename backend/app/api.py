@@ -1,6 +1,8 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
 from app.schemas import PredictionResponse
 from app.ml_service import predict, load_model
+from app.auth import get_current_user
+from app.models import User
 
 router = APIRouter()
 
@@ -9,7 +11,10 @@ async def startup_event():
     load_model()
 
 @router.post("/predict", response_model=PredictionResponse)
-async def predict_endpoint(file: UploadFile = File(...)):
+async def predict_endpoint(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user)
+):
     # Validate file type
     if file.content_type not in ["image/jpeg", "image/png", "image/jpg"]:
         raise HTTPException(status_code=400, detail="Invalid file type. Please upload a JPEG or PNG.")
