@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In - Cancer Detection System</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../styles/styles.css">
 </head>
 
 <body>
@@ -42,9 +42,7 @@
 
                 <div id="generalError" class="error-msg general-error"></div>
 
-                <button type="submit" class="btn-auth" id="signinBtn">
-                    Sign In
-                </button>
+                <button type="submit" class="btn-auth" id="signinBtn">Sign In</button>
             </form>
 
             <div class="auth-footer">
@@ -53,7 +51,9 @@
         </div>
     </div>
 
-    <script src="auth.js"></script>
+    <!-- MVC: Model → Controller -->
+    <script src="../models/auth.model.js"></script>
+    <script src="../controllers/auth.controller.js"></script>
 </body>
 
 </html>
