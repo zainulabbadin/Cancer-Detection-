@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cancer Detection System</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../styles/styles.css">
 </head>
 
 <body>
@@ -43,20 +43,34 @@
             <div id="resultBox" class="result-container" style="display: none;">
                 <h3>Diagnosis Result</h3>
                 <div class="result-item">
-                    <span>Prediction:</span>
+                    <span>Patient Image ID:</span>
+                    <strong id="imageIdValue">--</strong>
+                </div>
+                <div class="result-item">
+                    <span>Cancer Type:</span>
                     <strong id="predValue">--</strong>
                 </div>
                 <div class="result-item">
                     <span>Confidence:</span>
                     <strong id="confValue">--%</strong>
                 </div>
+                <div class="result-item">
+                    <span>Date:</span>
+                    <strong id="dateValue">--</strong>
+                </div>
                 <p id="systemMsg" class="meta-text"></p>
+                <button id="downloadPdfBtn" class="btn-download-pdf" onclick="downloadDiagnosisPDF()">
+                    &#11015; Download Diagnosis PDF
+                </button>
             </div>
         </div>
     </div>
 
-    <script src="auth.js"></script>
-    <script src="script.js"></script>
+    <!-- jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- MVC: Model → Controller (order matters) -->
+    <script src="../models/auth.model.js"></script>
+    <script src="../controllers/app.controller.js"></script>
 
 </body>
 

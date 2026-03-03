@@ -114,8 +114,22 @@ header p {
 .result-item {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    gap: 10px;
+}
+
+.result-item span {
+    color: #6b7280;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.result-item strong {
+    text-align: right;
+    word-break: break-all;
+    font-size: 0.95rem;
 }
 
 .meta-text {
@@ -123,6 +137,7 @@ header p {
     color: #9ca3af;
     text-align: center;
     margin-top: 15px;
+    margin-bottom: 0;
 }
 
 .loader {
@@ -130,6 +145,36 @@ header p {
     margin-top: 15px;
     color: var(--primary);
     font-weight: 600;
+}
+
+/* ==================== DOWNLOAD PDF BUTTON ==================== */
+
+.btn-download-pdf {
+    display: block;
+    width: 100%;
+    margin-top: 18px;
+    padding: 12px;
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.35);
+}
+
+.btn-download-pdf:hover {
+    background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.45);
+}
+
+.btn-download-pdf:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 4px rgba(22, 163, 74, 0.3);
 }
 
 /* ==================== AUTHENTICATION STYLES ==================== */
