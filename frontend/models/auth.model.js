@@ -6,19 +6,19 @@
 
 const AUTH_TOKEN_KEY = 'auth_token';
 
-export function setToken(token) {
+function setToken(token) {
     localStorage.setItem(AUTH_TOKEN_KEY, token);
 }
 
-export function getToken() {
+function getToken() {
     return localStorage.getItem(AUTH_TOKEN_KEY);
 }
 
-export function removeToken() {
+function removeToken() {
     localStorage.removeItem(AUTH_TOKEN_KEY);
 }
 
-export function isAuthenticated() {
+function isAuthenticated() {
     return getToken() !== null;
 }
 
