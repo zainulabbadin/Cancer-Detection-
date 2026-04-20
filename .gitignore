@@ -9,10 +9,10 @@ backend/venv/
 backend/venv_test/
 venv/
 
-*.ckpt
 *.pth
 *.pt
-backend/models/
+# .ckpt files are tracked by Git LFS
+# backend/models/ - Model files are now tracked via LFS
 # Env & logs
 .env
 *.log
