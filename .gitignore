@@ -9,7 +9,11 @@ backend/venv/
 backend/venv_test/
 venv/
 
+*.ckpt
+*.pth
+*.pt
 
 # Env & logs
 .env
 *.log
+
