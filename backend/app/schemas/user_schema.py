@@ -43,3 +43,12 @@ class PredictionResponse(BaseModel):
     prediction: str
     confidence: float
     message: str
+
+class OODPredictionResponse(BaseModel):
+    filename: str
+    is_valid: bool
+    ood_score: float
+    prediction: Optional[str] = None
+    confidence: Optional[float] = None
+    message: str
+

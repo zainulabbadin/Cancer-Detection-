@@ -1,248 +1,274 @@
-/**
- * CONTROLLER — App Controller
- * Responsible for: image upload, analyze button, result display, PDF download.
- * Reads from: AuthModel (token), DOM (file input, buttons)
- * Writes to: DOM (result box, preview, loading state)
- */
-
-const API_URL = 'http://127.0.0.1:8001';
-
-// ── Auth Guard ───────────────────────────────────────────────────────────────
-if (!window.AuthModel.isAuthenticated()) {
-    window.location.href = 'signin.html';
-}
-
-// ── DOM Refs ─────────────────────────────────────────────────────────────────
-const fileInput = document.getElementById('fileInput');
-const fileName = document.getElementById('fileName');
-const imagePreview = document.getElementById('imagePreview');
-const analyzeBtn = document.getElementById('analyzeBtn');
-const resultBox = document.getElementById('resultBox');
-const loading = document.getElementById('loading');
-const predValue = document.getElementById('predValue');
-const confValue = document.getElementById('confValue');
-const systemMsg = document.getElementById('systemMsg');
-const imageIdValue = document.getElementById('imageIdValue');
-const dateValue = document.getElementById('dateValue');
-
-// ── State ────────────────────────────────────────────────────────────────────
 let selectedFile = null;
-let lastDiagnosis = null;
 
-// ── Utility Functions ─────────────────────────────────────────────────────────
-
-function generatePatientImageId(filename) {
-    const timestamp = Date.now();
-    const base = filename.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 6);
-    const suffix = timestamp.toString().slice(-6);
-    return `IMG-${base}-${suffix}`;
+// Auth check
+function checkAuth() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'signin.html';
+        return null;
+    }
+    const username = localStorage.getItem('username') || 'Doctor';
+    document.getElementById('welcomeMessage').textContent = `Welcome, Dr. ${username}`;
+    return token;
 }
 
-function formatDateTime() {
-    return new Date().toLocaleString('en-US', {
-        year: 'numeric', month: 'long', day: 'numeric',
-        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
-    });
-}
-
-// ── Load and display logged-in user's username ────────────────────────────────
-
-async function loadUserInfo() {
-    const token = window.AuthModel.getToken();
-    try {
-        const response = await fetch(`${API_URL}/me`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (response.ok) {
-            const userData = await response.json();
-            document.getElementById('usernameDisplay').textContent = `👤 ${userData.username}`;
-            document.getElementById('userInfo').style.display = 'flex';
-        } else {
-            window.AuthModel.removeToken();
-            window.location.href = 'signin.html';
+// Show Toast
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+        if(container.contains(toast)) {
+            container.removeChild(toast);
         }
-    } catch (err) {
-        console.error('Error loading user info:', err);
-    }
+    }, 5000);
 }
-loadUserInfo();
 
-// ── File Selection ────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    const token = checkAuth();
+    if (!token) return;
 
-fileInput.addEventListener('change', function (e) {
-    if (e.target.files && e.target.files[0]) {
-        selectedFile = e.target.files[0];
-        fileName.textContent = selectedFile.name;
+    // Elements
+    const btnLogout = document.getElementById('btnLogout');
+    const uploadZone = document.getElementById('uploadZone');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const btnAnalyze = document.getElementById('btnAnalyze');
+    
+    // Pipeline & Result Elements
+    const pipelineContainer = document.getElementById('pipelineContainer');
+    const steps = [
+        document.getElementById('step1'),
+        document.getElementById('step2'),
+        document.getElementById('step3')
+    ];
+    const resultContainer = document.getElementById('resultContainer');
+    const oodBadge = document.getElementById('oodBadge');
+    const resultType = document.getElementById('resultType');
+    const resultConfidence = document.getElementById('resultConfidence');
+    const confidenceRing = document.getElementById('confidenceRing');
+    const resultMessage = document.getElementById('resultMessage');
+    const btnDownloadPdf = document.getElementById('btnDownloadPdf');
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            imagePreview.src = e.target.result;
-            imagePreview.style.display = 'block';
-        };
-        reader.readAsDataURL(selectedFile);
+    // Logout
+    btnLogout.addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        window.location.href = 'signin.html';
+    });
 
-        analyzeBtn.disabled = false;
-        resultBox.style.display = 'none';
-        lastDiagnosis = null;
-    }
-});
-
-// ── Analyze ───────────────────────────────────────────────────────────────────
-
-analyzeBtn.addEventListener('click', async function () {
-    if (!selectedFile) return;
-
-    analyzeBtn.disabled = true;
-    loading.style.display = 'block';
-    resultBox.style.display = 'none';
-
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-
-    try {
-        const token = window.AuthModel.getToken();
-        const response = await fetch(`${API_URL}/predict`, {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}` },
-            body: formData
-        });
-        const data = await response.json();
-
-        if (response.ok) {
-            const patientImageId = generatePatientImageId(selectedFile.name);
-            const diagnosisDate = formatDateTime();
-            const confidencePercent = (data.confidence * 100).toFixed(2) + '%';
-
-            // Store for PDF generation
-            lastDiagnosis = {
-                patientImageId,
-                cancerType: data.prediction,
-                confidence: confidencePercent,
-                date: diagnosisDate,
-                filename: selectedFile.name,
-                message: data.message
+    // File Selection
+    function handleFile(file) {
+        if (file && file.type.startsWith('image/')) {
+            selectedFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'inline-block';
             };
-
-            // Update View
-            imageIdValue.textContent = patientImageId;
-            predValue.textContent = data.prediction;
-            confValue.textContent = confidencePercent;
-            dateValue.textContent = diagnosisDate;
-            systemMsg.textContent = data.message;
-            predValue.style.color = data.prediction.includes('Malignant') ? '#dc2626' : '#16a34a';
-            resultBox.style.display = 'block';
-
-        } else if (response.status === 401) {
-            alert('Session expired. Please sign in again.');
-            window.AuthModel.removeToken();
-            window.location.href = 'signin.html';
+            reader.readAsDataURL(file);
+            btnAnalyze.disabled = false;
+            
+            // Reset UI
+            pipelineContainer.style.display = 'none';
+            resultContainer.style.display = 'none';
+            steps.forEach(s => {
+                s.classList.remove('active', 'done');
+            });
+            btnDownloadPdf.style.display = 'none';
         } else {
-            alert('Error: ' + data.detail);
+            showToast('Please select a valid image file (JPEG/PNG).', 'error');
         }
-    } catch {
-        alert("Could not connect to backend. Make sure it's running on port 8001.");
-    } finally {
-        loading.style.display = 'none';
-        analyzeBtn.disabled = false;
-    }
-});
-
-// ── PDF Generation ────────────────────────────────────────────────────────────
-
-window.downloadDiagnosisPDF = function () {
-    if (!lastDiagnosis) {
-        alert('No diagnosis data available. Please analyze an image first.');
-        return;
     }
 
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const margin = 50;
-    const contentWidth = pageWidth - margin * 2;
-
-    // Header
-    doc.setFillColor(37, 99, 235);
-    doc.rect(0, 0, pageWidth, 90, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(22);
-    doc.text('Medical AI Diagnostic', pageWidth / 2, 38, { align: 'center' });
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(12);
-    doc.text('Cancer Detection System — Diagnosis Report', pageWidth / 2, 60, { align: 'center' });
-    doc.setFontSize(9);
-    doc.text('CONFIDENTIAL — For Medical Use Only', pageWidth / 2, 78, { align: 'center' });
-
-    let y = 110;
-    doc.setDrawColor(37, 99, 235); doc.setLineWidth(1.5);
-    doc.line(margin, y, pageWidth - margin, y); y += 18;
-
-    // Report Info Section
-    doc.setTextColor(30, 30, 30); doc.setFont('helvetica', 'bold'); doc.setFontSize(13);
-    doc.text('Report Information', margin, y); y += 18;
-
-    [['Patient Image ID', lastDiagnosis.patientImageId],
-    ['Original Filename', lastDiagnosis.filename],
-    ['Report Date & Time', lastDiagnosis.date]].forEach(([label, value]) => {
-        doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(80, 80, 80);
-        doc.text(label + ':', margin, y);
-        doc.setFont('helvetica', 'normal'); doc.setTextColor(30, 30, 30);
-        doc.text(String(value), margin + 140, y);
-        y += 16;
+    // Drag and Drop
+    uploadZone.addEventListener('click', () => imageInput.click());
+    
+    uploadZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
     });
 
-    y += 10;
-    doc.setDrawColor(220, 220, 220); doc.setLineWidth(0.5);
-    doc.line(margin, y, pageWidth - margin, y); y += 20;
+    uploadZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+    });
 
-    // Diagnosis Results Section
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(30, 30, 30);
-    doc.text('Diagnosis Results', margin, y); y += 18;
+    uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            handleFile(e.dataTransfer.files[0]);
+        }
+    });
 
-    const isMalignant = lastDiagnosis.cancerType.toLowerCase().includes('malignant');
-    const boxColor = isMalignant ? [220, 38, 38] : [22, 163, 74];
-    doc.setFillColor(...boxColor);
-    doc.roundedRect(margin, y - 14, contentWidth, 30, 4, 4, 'F');
-    doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold'); doc.setFontSize(13);
-    doc.text('Cancer Type: ' + lastDiagnosis.cancerType, pageWidth / 2, y + 6, { align: 'center' });
-    y += 44;
+    imageInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            handleFile(e.target.files[0]);
+        }
+    });
 
-    doc.setTextColor(30, 30, 30); doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
-    doc.text('Confidence Score:', margin, y);
-    doc.setFont('helvetica', 'normal');
-    doc.text(lastDiagnosis.confidence, margin + 140, y); y += 20;
+    // Analyze Process
+    const delay = ms => new Promise(res => setTimeout(res, ms));
 
-    // Confidence bar
-    doc.setFillColor(229, 231, 235);
-    doc.roundedRect(margin, y, contentWidth, 12, 3, 3, 'F');
-    doc.setFillColor(...boxColor);
-    doc.roundedRect(margin, y, contentWidth * (parseFloat(lastDiagnosis.confidence) / 100), 12, 3, 3, 'F');
-    y += 28;
-
-    if (lastDiagnosis.message) {
-        doc.setFont('helvetica', 'italic'); doc.setFontSize(9); doc.setTextColor(120, 120, 120);
-        doc.text(lastDiagnosis.message, pageWidth / 2, y, { align: 'center', maxWidth: contentWidth });
-        y += 20;
+    async function setStep(index, state) {
+        if (state === 'active') {
+            steps[index].classList.add('active');
+        } else if (state === 'done') {
+            steps[index].classList.remove('active');
+            steps[index].classList.add('done');
+        }
     }
 
-    y += 10;
-    doc.setDrawColor(220, 220, 220); doc.setLineWidth(0.5);
-    doc.line(margin, y, pageWidth - margin, y); y += 20;
+    btnAnalyze.addEventListener('click', async () => {
+        if (!selectedFile) return;
 
-    // Disclaimer
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(150, 150, 150);
-    doc.text('Disclaimer', margin, y); y += 13;
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(8);
-    const disclaimer = 'This report is generated by an AI-based cancer detection system and is intended for informational purposes only. It should not be used as a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider with any questions you may have regarding a medical condition.';
-    const lines = doc.splitTextToSize(disclaimer, contentWidth);
-    doc.text(lines, margin, y);
+        btnAnalyze.disabled = true;
+        btnAnalyze.textContent = 'Processing...';
+        
+        // Reset and Show Pipeline
+        resultContainer.style.display = 'none';
+        steps.forEach(s => s.classList.remove('active', 'done'));
+        pipelineContainer.style.display = 'flex';
 
-    // Footer
-    doc.setDrawColor(37, 99, 235); doc.setLineWidth(1);
-    doc.line(margin, pageHeight - 36, pageWidth - margin, pageHeight - 36);
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(100, 100, 100);
-    doc.text('Medical AI Diagnostic — Cancer Detection System', margin, pageHeight - 20);
-    doc.text('Generated: ' + lastDiagnosis.date, pageWidth - margin, pageHeight - 20, { align: 'right' });
+        const formData = new FormData();
+        formData.append('file', selectedFile);
 
-    doc.save(`Diagnosis_${lastDiagnosis.patientImageId.replace(/[^a-zA-Z0-9-]/g, '_')}.pdf`);
-};
+        try {
+            // STEP 1: OOD Check (Simulated fast start)
+            await setStep(0, 'active');
+            
+            const response = await fetch('http://localhost:8000/predict', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            await delay(1000); // Visual buffer for step 1
+            await setStep(0, 'done');
+
+            if (response.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = 'signin.html';
+                return;
+            }
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.detail || 'Analysis failed');
+            }
+
+            // Processing based on OOD result
+            if (!data.is_valid) {
+                // Rejected by OOD
+                showToast('Image rejected: Not a medical image', 'error');
+                
+                resultContainer.style.display = 'block';
+                oodBadge.textContent = "Invalid Medical Image";
+                oodBadge.className = "ood-badge ood-invalid";
+                
+                document.getElementById('predictionDetails').style.display = 'none';
+                resultMessage.textContent = data.message;
+                
+                btnAnalyze.textContent = 'Analyze Scan';
+                btnAnalyze.disabled = false;
+                return;
+            }
+
+            // STEP 2: ML Model Processing
+            await setStep(1, 'active');
+            await delay(1500); // Visual buffer to simulate model time if fast
+            await setStep(1, 'done');
+
+            // STEP 3: Formatting Results
+            await setStep(2, 'active');
+            await delay(800);
+            await setStep(2, 'done');
+
+            // Show Validation Success
+            showToast('Analysis completed successfully');
+            
+            // Populate Results
+            resultContainer.style.display = 'block';
+            document.getElementById('predictionDetails').style.display = 'flex';
+            
+            oodBadge.textContent = "Valid Medical Image (" + (data.ood_score.toFixed(2)) + ")";
+            oodBadge.className = "ood-badge ood-valid";
+            
+            resultType.textContent = data.prediction;
+            resultMessage.textContent = data.message;
+            
+            // Animate Confidence Ring
+            const confValue = (data.confidence * 100).toFixed(1);
+            resultConfidence.textContent = `${confValue}%`;
+            
+            // Circumference is 251.2
+            const offset = 251.2 - (251.2 * confValue) / 100;
+            setTimeout(() => {
+                confidenceRing.style.strokeDashoffset = offset;
+            }, 100);
+
+            // PDF Data Prep
+            window.latestResult = data;
+            btnDownloadPdf.style.display = 'block';
+
+        } catch (error) {
+            console.error(error);
+            showToast(error.message, 'error');
+            steps.forEach(s => s.classList.remove('active'));
+        } finally {
+            btnAnalyze.textContent = 'Analyze Scan';
+            btnAnalyze.disabled = false;
+        }
+    });
+
+    // PDF Generation
+    btnDownloadPdf.addEventListener('click', () => {
+        if (!window.latestResult || !window.jspdf) {
+            showToast("Cannot generate PDF.", 'error');
+            return;
+        }
+        
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const data = window.latestResult;
+            const date = new Date().toLocaleString();
+            
+            doc.setFontSize(22);
+            doc.text("Cancer Detection Report", 20, 20);
+            
+            doc.setFontSize(12);
+            doc.text(`Date & Time: ${date}`, 20, 35);
+            doc.text(`File Analyzed: ${data.filename}`, 20, 45);
+            
+            doc.setLineWidth(0.5);
+            doc.line(20, 50, 190, 50);
+
+            if (!data.is_valid) {
+                 doc.setTextColor(239, 68, 68);
+                 doc.text("Status: INVALID MEDICAL IMAGE", 20, 65);
+                 doc.setTextColor(0,0,0);
+                 doc.text(`Message: ${data.message}`, 20, 75);
+            } else {
+                 doc.text(`Validation Score: ${data.ood_score.toFixed(3)} (Valid Medical Image)`, 20, 65);
+                 doc.text(`Detected Condition: ${data.prediction}`, 20, 75);
+                 doc.text(`Confidence Level: ${(data.confidence * 100).toFixed(2)}%`, 20, 85);
+                 doc.text(`Message: ${data.message}`, 20, 95);
+            }
+            
+            doc.save(`Medical_Report_${data.filename}.pdf`);
+            showToast("Report downloaded successfully!");
+        } catch (err) {
+            console.error("PDF generation failed:", err);
+            showToast("PDF generation failed.", "error");
+        }
+    });
+});
