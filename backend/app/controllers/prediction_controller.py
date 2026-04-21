@@ -10,11 +10,6 @@ router = APIRouter(tags=["Prediction"])
 security = HTTPBearer()
 
 
-@router.on_event("startup")
-async def startup_event():
-    """Load ML model into memory on server startup."""
-    ood_service.load_clip_model()
-    prediction_service.load_model()
 
 
 @router.post("/predict", response_model=OODPredictionResponse)

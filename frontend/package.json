@@ -1,17 +1,9 @@
 {
-  "name": "frontend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "script.js",
- "scripts": {
-  "start": "live-server --open=views/index.html",
-  "test": "echo \"Error: no test specified\" && exit 1"
-},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {},
-  "devDependencies": {
-    "live-server": "^1.2.2"
-  }
+  "name": "cancerai-medical-dashboard",
+  "version": "2.0.0",
+  "description": "Premium AI-Powered Medical Dashboard",
+  "scripts": {
+    "start": "npx live-server --open=views/signin.html"
+  },
+  "dependencies": {}
 }

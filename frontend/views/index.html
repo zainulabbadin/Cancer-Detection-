@@ -4,102 +4,146 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Cancer Detection</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../styles/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="../styles/dashboard.css">
 </head>
 <body>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <h1>Dashboard</h1>
+        <div class="top-nav-right">
+            <span class="welcome-text">Welcome, Mr. zainulabbadin172</span>
+            <button class="btn-signout" id="logout-btn">Sign Out</button>
+        </div>
+    </nav>
+
     <div class="main-container">
-        <header class="glass-card" style="padding: 15px 25px; margin-bottom: 25px;">
-            <h2 style="margin:0; font-size:1.5rem; color:var(--primary);">Dashboard</h2>
-            <div class="user-info">
-                <span id="welcomeMessage">Dr. User</span>
-                <button id="btnLogout" class="btn-logout">Sign Out</button>
-            </div>
-        </header>
-
-        <div class="glass-card">
-            <h3 style="margin-top:0;">New Analysis</h3>
-            <div class="upload-zone" id="uploadZone">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--secondary); margin-bottom:10px;">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+        
+        <!-- CARD 1: New Analysis -->
+        <section class="dark-card" id="section-upload">
+            <h2>New Analysis</h2>
+            
+            <div class="upload-box" id="drop-zone">
+                <svg class="upload-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
                 </svg>
-                <p>Drag & drop medical image here <br> or click to browse</p>
-                <input type="file" id="imageInput" accept="image/jpeg, image/png, image/jpg" style="display: none;">
+                <div class="upload-text">Drag & drop medical image here or click to browse</div>
             </div>
+            <input type="file" id="file-input" style="display: none;" accept="image/jpeg, image/png">
+
+            <div id="preview-area">
+                <img id="preview-img" src="" class="img-preview" alt="MRI Scan Preview">
+            </div>
+
+            <button class="btn-primary-blue" id="btn-process" disabled>Analyze Scan</button>
+        </section>
+
+        <!-- CARD 2: Processing Pipeline -->
+        <section class="dark-card" id="section-pipeline">
+            <h2>Processing Pipeline</h2>
             
-            <div style="text-align: center;">
-                <img id="imagePreview" alt="Image preview">
+            <div class="pipeline-step pending" id="step1">
+                <div class="step-icon-area">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                </div>
+                <div class="step-details">
+                    <h4>Step 1: Out-of-Distribution Check</h4>
+                    <p>Validating image using CLIP ViT-B/32</p>
+                </div>
             </div>
 
-            <button id="btnAnalyze" class="btn-primary" disabled style="margin-top:20px;">Analyze Scan</button>
-        </div>
+            <div class="pipeline-step pending" id="step2">
+                <div class="step-icon-area">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                </div>
+                <div class="step-details">
+                    <h4>Step 2: Cancer Detection Model</h4>
+                    <p>Running deep learning classification</p>
+                </div>
+            </div>
 
-        <div id="pipelineContainer" class="glass-card pipeline">
-            <h3 style="margin-top:0;">Processing Pipeline</h3>
+            <div class="pipeline-step pending" id="step3">
+                <div class="step-icon-area">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <div class="step-details">
+                    <h4>Step 3: Finalizing Results</h4>
+                    <p>Compiling diagnostic report</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARD 3: Diagnostic Results -->
+        <section class="dark-card" id="section-results">
+            <h2>Diagnostic Results</h2>
             
-            <div class="pipeline-step" id="step1">
-                <div class="step-icon-wrapper">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            <div class="result-valid-box" id="ood-banner">
+                Valid Medical Image (0.23)
+            </div>
+
+            <!-- New Diagnostic UI Info Mapping -->
+            <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; font-size: 0.95rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="color: var(--text-secondary);">Patient Image ID:</span>
+                    <span id="ui-res-id" style="color: var(--text-primary); font-weight: 600;">IMG-000000</span>
                 </div>
-                <div>
-                    <strong>Step 1: Out-of-Distribution Check</strong>
-                    <div style="font-size:0.85rem; color:var(--text-muted);">Validating image using CLIP ViT-B/32</div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="color: var(--text-secondary);">Original Filename:</span>
+                    <span id="ui-res-filename" style="color: var(--text-primary); font-weight: 600;">scan.jpg</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-secondary);">Report Date & Time:</span>
+                    <span id="ui-res-date" style="color: var(--text-primary); font-weight: 600;">Date</span>
                 </div>
             </div>
 
-            <div class="pipeline-step" id="step2">
-                <div class="step-icon-wrapper">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-                </div>
+            <div class="inner-result-card" id="inner-result-box">
                 <div>
-                    <strong>Step 2: Cancer Detection Model</strong>
-                    <div style="font-size:0.85rem; color:var(--text-muted);">Running deep learning classification</div>
+                    <span class="detected-title">Detected Condition:</span>
+                    <div class="detected-name" id="res-name-text">Brain Cancer — Brain — Tumor (Other)</div>
                 </div>
-            </div>
 
-            <div class="pipeline-step" id="step3">
-                <div class="step-icon-wrapper">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                </div>
-                <div>
-                    <strong>Step 3: Finalizing Results</strong>
-                    <div style="font-size:0.85rem; color:var(--text-muted);">Compiling diagnostic report</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="resultContainer" class="glass-card result-container">
-            <h3 style="margin-top:0;">Diagnostic Results</h3>
-            
-            <div id="oodBadge" class="ood-badge"></div>
-
-            <div id="predictionDetails" class="prediction-card">
-                <div>
-                    <div style="color:var(--text-muted); font-size:0.9rem; margin-bottom:5px;">Detected Condition:</div>
-                    <div id="resultType" class="pred-type">-</div>
-                </div>
-                
-                <div class="confidence-ring-container">
-                    <svg class="confidence-ring" viewBox="0 0 100 100">
-                        <circle class="ring-bg" cx="50" cy="50" r="40"></circle>
-                        <circle id="confidenceRing" class="ring-progress" cx="50" cy="50" r="40"></circle>
+                <!-- Custom SVG Circular Progress -->
+                <div class="circle-wrap">
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <circle class="circle-bg" cx="50" cy="50" r="40"></circle>
+                        <circle class="circle-prog" id="res-circle-line" cx="50" cy="50" r="40"></circle>
                     </svg>
-                    <div id="resultConfidence" class="confidence-text">0%</div>
+                    <div class="circle-text" id="res-perc-text">100.0%</div>
                 </div>
             </div>
 
-            <p id="resultMessage" style="font-size:0.85rem; color:var(--text-muted); text-align:center; margin-top:20px;"></p>
+            <div class="analysis-success-text" id="analysis-msg">
+                Analysis successful.
+            </div>
 
-            <button id="btnDownloadPdf" class="btn-download-pdf" style="display:none;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:bottom; margin-right:5px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            <!-- Download PDF Button trigger -->
+            <button class="btn-pdf" id="btn-print">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 Download PDF Report
             </button>
-        </div>
+        </section>
+
     </div>
 
-    <div class="toast-container" id="toastContainer"></div>
 
-    <script type="module" src="../controllers/app.controller.js"></script>
+
+    <!-- Hidden data store — populated by uiCtrl.js, read by jsPDF builder in appCtrl.js -->
+    <span id="pdf-id" style="display:none;"></span>
+    <span id="pdf-filename" style="display:none;"></span>
+    <span id="pdf-date" style="display:none;"></span>
+    <span id="pdf-result-text" style="display:none;"></span>
+    <span id="pdf-conf-text" style="display:none;"></span>
+    <span id="pdf-conf-fill" style="display:none;"></span>
+
+    <!-- jsPDF Library for direct PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script src="../models/api.js"></script>
+    <script src="../controllers/ui.controller.js"></script>
+    <script src="../controllers/pdf.controller.js"></script>
+    <script src="../controllers/app.controller.js" defer></script>
 </body>
 </html>

@@ -3,47 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - Cancer Detection Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../styles/styles.css">
+    <title>Login - Cancer Detection System</title>
+    <link rel="stylesheet" href="../styles/dashboard.css">
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-brand">
-            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:20px; animation: float 3s ease-in-out infinite;">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-            </svg>
-            <h2>AI-Powered Cancer Detection</h2>
-            <p style="color: rgba(255,255,255,0.8); margin-top: 10px;">Fast, reliable, and intelligent analysis verified by advanced CLIP models.</p>
-        </div>
-        <div class="auth-form-panel">
-            <h2 class="auth-title">Welcome Back</h2>
-            <form id="signinForm">
-                <div class="general-error error-msg" id="generalError"></div>
-                
-                <div class="form-group">
+    <div class="auth-wrapper">
+        <div class="auth-dark-card">
+            
+            <h2>Secure Login</h2>
+            <p>Access your medical AI dashboard</p>
+
+            <form id="signin-form">
+                <div class="form-grp">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required placeholder="doctor@hospital.com">
-                    <span class="error-msg" id="emailError"></span>
+                    <input type="email" id="email" placeholder="doctor@hospital.org" required>
                 </div>
-
-                <div class="form-group">
+                
+                <div class="form-grp">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required placeholder="••••••••">
-                    <span class="error-msg" id="passwordError"></span>
+                    <input type="password" id="password" placeholder="••••••••" required>
                 </div>
 
-                <button type="submit" class="btn-primary" id="btnSubmit">Sign In</button>
+                <button type="submit" class="btn-auth">Sign In</button>
+                
+                <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
+                    <span style="color: var(--text-secondary);">New user?</span> 
+                    <a href="signup.html" style="color: var(--btn-blue); font-weight: 600; text-decoration: none;">Create an account</a>
+                </div>
             </form>
-
-            <div class="auth-footer">
-                <p>Don't have an account? <a href="signup.html">Request Access</a></p>
-            </div>
+            
         </div>
     </div>
     
-    <div class="toast-container" id="toastContainer"></div>
-
-    <script type="module" src="../controllers/auth.controller.js"></script>
+    <script src="../models/api.js"></script>
+    <script src="../controllers/auth.controller.js" defer></script>
 </body>
 </html>
