@@ -38,6 +38,9 @@ def load_clip_model():
             text_features /= text_features.norm(dim=-1, keepdim=True)
             
         logger.info("✅ CLIP model loaded successfully!")
+        print("\n" + "="*50)
+        print("✅ CLIP model loaded successfully!")
+        print("="*50 + "\n")
     except Exception as e:
         logger.error(f"Failed to load CLIP model: {e}")
 

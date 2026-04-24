@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --bg-dark: #0B1120; /* Deep Medical Navy */
+    --card-bg: #111827; /* Rich Dark Slate */
+    --border-color: #1F2937;
+    --text-primary: #F9FAFB;
+    --text-secondary: #9CA3AF;
+    
+    --btn-blue: #2563EB; /* Professional Medical Blue */
+    --btn-red-border: #ef4444; 
+    --btn-red-text: #ef4444;
+    
+    --step-bg-success: #064e3b; 
+    --step-border-success: #059669; 
+    --step-text-success: #34d399; 
+    
+    --step-bg-pending: #1F2937;
+    --step-border-pending: #374151;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding-bottom: 4rem;
+}
+
+/* -------------------------------- */
+/* In-Card Navbar (inside dark-card)*/
+/* -------------------------------- */
+.card-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0;
+    padding-bottom: 1.2rem;
+}
+
+.card-nav-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--btn-blue);
+    letter-spacing: -0.01em;
+}
+
+.card-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.card-nav-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin-bottom: 1.8rem;
+}
+
+.welcome-text {
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.btn-signout {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid #7f1d1d;
+    color: #ef4444;
+    padding: 0.45rem 1.1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+.btn-signout:hover { background-color: rgba(239, 68, 68, 0.22); }
+
+/* -------------------- */
+/* Main Container Cards */
+/* -------------------- */
+.main-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.dark-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 2.5rem;
+}
+
+.dark-card h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+/* -------------------- */
+/* Upload / Drag Box    */
+/* -------------------- */
+.upload-box {
+    border: 2px dashed #334155;
+    border-radius: 12px;
+    padding: 4rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 2rem;
+}
+.upload-box:hover { border-color: var(--btn-blue); background: rgba(29, 161, 242, 0.02); }
+.upload-icon {
+    color: var(--btn-blue);
+    margin-bottom: 1rem;
+}
+.upload-text {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    max-width: 300px;
+    margin: 0 auto;
+    line-height: 1.4;
+}
+.upload-hint {
+    font-size: 0.8rem;
+    color: #475569;
+    margin-top: 0.4rem;
+}
+
+.preview-area {
+    margin-bottom: 2rem;
+    display: none; /* Toggled to flex via JS */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+.img-preview {
+    max-width: 100%;
+    max-height: 350px;
+    border-radius: 12px;
+    object-fit: contain;
+}
+
+.btn-remove {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #ef4444;
+    border: 1px solid #7f1d1d;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: rgba(239, 68, 68, 0.08);
+    margin-top: 1rem;
+}
+.btn-remove:hover { background-color: rgba(239, 68, 68, 0.18); }
+
+/* ── Upload status message ── */
+.upload-status {
+    text-align: center;
+    font-size: 0.88rem;
+    margin-top: 0.75rem;
+    min-height: 1.2em;
+}
+.upload-status.info  { color: var(--btn-blue); }
+.upload-status.error { color: #ef4444; }
+
+.btn-primary-blue {
+    background: var(--btn-blue);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 1.25rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-primary-blue:hover { filter: brightness(1.1); }
+.btn-primary-blue:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* -------------------------------- */
+/* A4 PDF Generation Styles         */
+/* -------------------------------- */
+/* Rendered offscreen for html2pdf.js capturing */
+
+.pdf-header { background-color: #0c203b; color: white; text-align: center; padding: 40px 20px; border-bottom: 5px solid #007a99; font-family: Arial, sans-serif; }
+.pdf-body { padding: 40px; font-family: Arial, sans-serif; background: #ffffff; }
+.pdf-section-title { font-size: 14pt; font-weight: bold; color: #333; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 15px; }
+.pdf-info-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+.pdf-info-table td { padding: 5px 0; }
+.pdf-label { width: 30%; color: #666; font-weight: bold; font-size: 10pt; }
+.pdf-value { color: #333; font-size: 10pt; }
+.pdf-diagnosis-banner { background-color: #007a99; color: white; border-radius: 6px; padding: 12px; text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 20px; }
+.pdf-prog-bg { width: 100%; height: 12px; background: #007a99; border-radius: 4px; overflow: hidden; margin-top:10px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); }
+.pdf-prog-fill { height: 100%; background: #007a99; }
+.pdf-disclaimer { margin-top: 40px; border: 2px solid #007a99; border-radius: 4px; padding: 15px; background: white; }
+.pdf-disclaimer-title { font-size: 11pt; font-weight: bold; color: #0c203b; margin-bottom: 8px; }
+.pdf-disclaimer-text { font-size: 9pt; color: #444; line-height: 1.4; }

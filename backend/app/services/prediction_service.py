@@ -103,6 +103,7 @@ def load_model():
 
     try:
         logger.info("Loading model from %s …", MODEL_PATH)
+        print(f"\n🚀 Deep learning model found at {MODEL_PATH}, starting to load...")
         _device = "cuda" if torch.cuda.is_available() else "cpu"
 
         # Load Lightning checkpoint
@@ -133,6 +134,9 @@ def load_model():
         _fc_sub = fc_sub
 
         logger.info("✅ Cancer model loaded successfully! (device=%s)", _device)
+        print("\n" + "="*50)
+        print("✅ Deep learning model loaded successfully!")
+        print("="*50 + "\n")
 
     except Exception as e:
         logger.error("❌ Error loading model: %s", e)

@@ -164,7 +164,7 @@ class PDFController {
 
     /**
      * Bind the Download PDF button to generate the report.
-     * Called once on DOMContentLoaded from app.controller.js
+     * Called once on DOMContentLoaded from result.controller.js
      */
     static bindDownloadButton() {
         const btn = document.getElementById('btn-print');

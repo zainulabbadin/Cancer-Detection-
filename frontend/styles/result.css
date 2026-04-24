@@ -1,0 +1,318 @@
+/* =============================== */
+/*   RESULT PAGE SPECIFIC STYLES   */
+/* =============================== */
+
+/* Back row + page title row */
+.result-back-row {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--btn-blue);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid rgba(29, 161, 242, 0.3);
+    border-radius: 7px;
+    padding: 0.4rem 0.9rem;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.btn-back:hover {
+    background: rgba(29, 161, 242, 0.08);
+    border-color: var(--btn-blue);
+}
+
+.result-page-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+/* ── Status Badge ─────────────────────── */
+.result-badge {
+    display: inline-block;
+    padding: 0.3rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.badge-safe    { background: rgba(52, 211, 153, 0.15); color: #34d399; border: 1px solid #059669; }
+.badge-danger  { background: rgba(239, 68,  68, 0.15); color: #ef4444; border: 1px solid #7f1d1d; }
+.badge-invalid { background: rgba(251,191,  36, 0.15); color: #fbbf24; border: 1px solid #92400e; }
+
+/* ── Top Grid (image + info) ──────────── */
+/* ── Top 2-column grid (inner div) ──── */
+.result-top-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.result-image-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.result-image-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.result-img {
+    width: 100%;
+    max-height: 260px;
+    object-fit: contain;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: #0a0f18;
+}
+
+/* ── Info rows ───────────────────────── */
+.result-info-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.result-info-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.result-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+    gap: 1rem;
+}
+.result-info-row:last-child { border-bottom: none; }
+
+.result-info-key {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.result-info-key svg { flex-shrink: 0; opacity: 0.7; }
+
+.result-info-val {
+    color: var(--text-primary);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-align: right;
+    word-break: break-all;
+}
+
+/* ── Diagnosis Card ──────────────────── */
+.section-heading {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+.diagnosis-main-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1a2438;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.2rem 1.2rem;
+    margin-bottom: 0;
+    gap: 1rem;
+    transition: border-color 0.3s;
+}
+.diagnosis-main-box.is-danger {
+    border-color: #7f1d1d;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.diagnosis-left { flex: 1; }
+
+.diagnosis-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 0.6rem;
+}
+
+.diagnosis-name {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--btn-blue);
+    line-height: 1.3;
+    margin-bottom: 0.4rem;
+    word-break: break-word;
+}
+.diagnosis-main-box.is-danger .diagnosis-name { color: #ef4444; }
+
+.diagnosis-sub {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+}
+
+/* Circular chart right side */
+.diagnosis-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+.confidence-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+/* SVG circle — r=38, circumference ≈ 238.8 */
+.circle-bg {
+    fill: none;
+    stroke: #334155;
+    stroke-width: 8;
+}
+.circle-prog {
+    fill: none;
+    stroke: #34d399;
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 238.8;
+    stroke-dashoffset: 238.8;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    transition: stroke-dashoffset 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.circle-prog.circle-danger { stroke: #ef4444; }
+
+.circle-wrap {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+.circle-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+/* ── Confidence Bar ──────────────────── */
+.conf-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.conf-bar-track {
+    width: 100%;
+    height: 7px;
+    background: #1e293b;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+.conf-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    width: 0%;
+    transition: width 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #34d399;
+}
+
+.result-note {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: 0.5rem;
+}
+
+/* ── Full-width PDF footer (below grid) ── */
+.result-pdf-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.pdf-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--step-text-success);
+    flex: 1;
+}
+.pdf-footer-left svg {
+    flex-shrink: 0;
+    stroke: var(--step-text-success);
+}
+.download-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.2rem;
+}
+
+/* ── PDF Button ──────────────────────── */
+.btn-pdf {
+    background: #0f3c2e;
+    border: 1px solid var(--step-border-success);
+    color: var(--step-text-success);
+    padding: 0.8rem 1.4rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+.btn-pdf:hover { background: #064e3b; }
+
+/* ── Responsive ──────────────────────── */
+@media (max-width: 680px) {
+    .result-top-grid    { grid-template-columns: 1fr; }
+    .diagnosis-main-box { flex-direction: column; align-items: flex-start; }
+    .result-download-card { flex-direction: column; }
+    .btn-pdf { width: 100%; justify-content: center; }
+}
